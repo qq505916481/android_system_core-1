@@ -770,6 +770,44 @@ static int console_init_action(int nargs, char **args)
     return 0;
 }
 
+#ifdef MTK_HARDWARE
+static int read_serialno()
+{
+    char pval[PROP_VALUE_MAX];
+    int fd;
+    char serialno[32];
+    size_t s;
+
+    int ret = property_get("ro.boot.serialno", pval);
+    if (ret > 0) {
+        NOTICE("Already get serial number from cmdline\n");
+        return 1;
+    }
+
+    fd = open("/sys/sys_info/serial_number", O_RDWR);
+    if (fd < 0) {
+        NOTICE("fail to open: %s\n", "/sys/sys_info/serial_number");
+        return 0;
+    }
+    s = read(fd, serialno, sizeof(char)*32);
+
+    serialno[s-1] = '\0';
+
+    close(fd);
+
+    if (s <= 0) {
+	    NOTICE("could not read serial number sys file\n");
+	    return 0;
+	}
+
+    NOTICE( "serial number=%s\n",serialno);
+
+    property_set("ro.boot.serialno", serialno);
+
+    return 1;
+}
+#endif
+
 static void import_kernel_nv(char *name, bool for_emulator)
 {
     char *value = strchr(name, '=');
