@@ -80,6 +80,10 @@ ifeq ($(TARGET_BOARD_PLATFORM),mt6592)
 LOCAL_CFLAGS += -DMTK_MT6592
 endif
 
+ifeq ($(TARGET_BOARD_PLATFORM),mt6795)
+LOCAL_CFLAGS += -DMTK_MT6795
+endif
+
 LOCAL_MODULE:= init
 LOCAL_C_INCLUDES += \
     external/zlib \
