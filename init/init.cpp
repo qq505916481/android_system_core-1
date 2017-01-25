@@ -920,6 +920,10 @@ static void process_kernel_cmdline(void)
     import_kernel_cmdline(false, import_kernel_nv);
     if (qemu[0])
         import_kernel_cmdline(true, import_kernel_nv);
+
+#ifdef MTK_HARDWARE
+    read_serialno();
+#endif
 }
 
 static int queue_property_triggers_action(int nargs, char **args)
